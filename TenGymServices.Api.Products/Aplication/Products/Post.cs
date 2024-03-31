@@ -57,7 +57,6 @@ namespace TenGymServices.Api.Products.Aplication
                 _mapper = mapper;
                 _paypalService = paypalService;
                 _rabbitEventBus = rabbitEventBus;
-                _rabbitEventBus._hostName = "TenGym.Rabbitmq-web";
             }
 
             public async Task Handle(CreateTaskCommand request, CancellationToken cancellationToken)

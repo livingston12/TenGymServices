@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TenGymServices.Api.Products.Aplication.ExternalServices;
 using TenGymServices.Api.Products.Core.Utils;
@@ -64,7 +65,15 @@ namespace TenGymServices.Api.Products
             services.AddScoped<IPaypalProductService, PaypalService>();
             services.AddSingleton<ExceptionHandlerMiddleware>();
             services.AddSingleton<IPaypalAuthService, PaypalAuthService>();
-            services.AddTransient<IRabbitEventBus, RabbitEventBus>();
+            services.AddTransient<IRabbitEventBus, RabbitEventBus>(x => 
+            {
+                var mediator = x.GetService<IMediator>();
+                var rabbit = new RabbitEventBus(mediator)
+                {
+                    _hostName = "TenGym.Rabbitmq-web"
+                };
+                return (RabbitEventBus)rabbit;
+            });
 
             // Consume Rabbitmq
             services.AddTransient<IEventHandler<ProductEventQuee>, ProductEventHandler>();
