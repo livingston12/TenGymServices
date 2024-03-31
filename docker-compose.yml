@@ -23,7 +23,7 @@ services:
     ports:
       - 1433:1433
     environment:
-      - SA_PASSWORD=CQw3PUAtJUB
+      - SA_PASSWORD=YOUR_PASS
       - ACCEPT_EULA=Y
     networks:
       - tengymservicesnet
