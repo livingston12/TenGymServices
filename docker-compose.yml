@@ -4,17 +4,30 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     ports:
-      - "5672:5672"  # Puerto de RabbitMQ
-      - "15672:15672"  # Puerto de RabbitMQ Management Plugin (interfaz web)
+      - "5672:5672"
+      - "15672:15672"
     container_name: "TenGym.Rabbitmq-web"
     networks:
       - tengymservicesnet
     environment:
-      RABBITMQ_DEFAULT_USER: "guest"  # Usuario por defecto
-      RABBITMQ_DEFAULT_PASS: "guest"  # Contraseña por defecto
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
     volumes:
-      - rabbitmq-data:/var/lib/rabbitmq  # Volumen para persistir los datos
-
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-log:/var/log/rabbitmq
+    user: "root"
+# =============== Databases ===============
+  sql-server-product-db:
+    image: mcr.microsoft.com/mssql/server
+    container_name: TenGymServices.Database.Products
+    ports:
+      - 1433:1433
+    environment:
+      - SA_PASSWORD=CQw3PUAtJUB
+      - ACCEPT_EULA=Y
+    networks:
+      - tengymservicesnet
+# =============== Microservices ===============
   tengymservicesapiproducts:
     image: ${DOCKER_REGITRY-}tengymservicesapiproducts
     build:
@@ -25,9 +38,13 @@ services:
     container_name: "TenGymServices.Api.Products"
     networks:
       - tengymservicesnet
+    depends_on:
+      - sql-server-product-db
+      - rabbitmq
 networks:
   tengymservicesnet:
     external: true
 volumes:
   rabbitmq-data:
+  rabbitmq-log:
     
