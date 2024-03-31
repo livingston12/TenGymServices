@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "zrzguPPRtJlnmxmAP+MsYme1+afKiviNb5LDyvMyREY=",
+  "Source": "TenGymServices.Api.Products",
+  "BasePath": "_content/TenGymServices.Api.Products",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

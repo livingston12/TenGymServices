@@ -1,0 +1,18 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  tengymservicesapiproducts:
+    image: tengymservicesapiproducts
+    build:
+      context: .
+      dockerfile: TenGymServices.Api.Products/Dockerfile
+      args:
+        - configuration=Debug
+    ports:
+      - 6001:6001
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw

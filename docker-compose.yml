@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"  # Puerto de RabbitMQ
+      - "15672:15672"  # Puerto de RabbitMQ Management Plugin (interfaz web)
+    container_name: "TenGym.Rabbitmq-web"
+    networks:
+      - tengymservicesnet
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"  # Usuario por defecto
+      RABBITMQ_DEFAULT_PASS: "guest"  # Contraseña por defecto
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq  # Volumen para persistir los datos
+
+  tengymservicesapiproducts:
+    image: ${DOCKER_REGITRY-}tengymservicesapiproducts
+    build:
+      context: .
+      dockerfile: TenGymServices.Api.Products/Dockerfile
+    ports:
+      - 6001:6001
+    container_name: "TenGymServices.Api.Products"
+    networks:
+      - tengymservicesnet
+networks:
+  tengymservicesnet:
+    external: true
+volumes:
+  rabbitmq-data:
+    

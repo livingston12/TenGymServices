@@ -1,0 +1,12 @@
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/bin/Debug/net7.0/TenGymServices.RabbitMq.Bus.deps.json
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/bin/Debug/net7.0/TenGymServices.RabbitMq.Bus.dll
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/bin/Debug/net7.0/TenGymServices.RabbitMq.Bus.pdb
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/obj/Debug/net7.0/TenGymServices.RabbitMq.Bus.csproj.AssemblyReference.cache
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/obj/Debug/net7.0/TenGymServices.RabbitMq.Bus.GeneratedMSBuildEditorConfig.editorconfig
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/obj/Debug/net7.0/TenGymServices.RabbitMq.Bus.AssemblyInfoInputs.cache
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/obj/Debug/net7.0/TenGymServices.RabbitMq.Bus.AssemblyInfo.cs
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/obj/Debug/net7.0/TenGymServices.RabbitMq.Bus.csproj.CoreCompileInputs.cache
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/obj/Debug/net7.0/TenGymServices.RabbitMq.Bus.dll
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/obj/Debug/net7.0/refint/TenGymServices.RabbitMq.Bus.dll
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/obj/Debug/net7.0/TenGymServices.RabbitMq.Bus.pdb
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/obj/Debug/net7.0/ref/TenGymServices.RabbitMq.Bus.dll

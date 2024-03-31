@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "cnDHdjEkl3Xw+1rN6KGkz3WwuADnCUQCff1FBc2lM8kU0ZHSzg5gJWKY8XuaNjgWcP/LQBcoViQn72jr4kD7XA==",
+  "success": true,
+  "projectFilePath": "/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.RabbitMq.Bus/TenGymServices.RabbitMq.Bus.csproj",
+  "expectedPackageFiles": [
+    "/Users/livingstonreynoso/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
+    "/Users/livingstonreynoso/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
+    "/Users/livingstonreynoso/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/Users/livingstonreynoso/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/Users/livingstonreynoso/.nuget/packages/rabbitmq.client/6.8.1/rabbitmq.client.6.8.1.nupkg.sha512",
+    "/Users/livingstonreynoso/.nuget/packages/system.memory/4.5.5/system.memory.4.5.5.nupkg.sha512",
+    "/Users/livingstonreynoso/.nuget/packages/system.threading.channels/7.0.0/system.threading.channels.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

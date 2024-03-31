@@ -1,0 +1,12 @@
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/bin/Debug/net7.0/TenGymServices.Shared.deps.json
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/bin/Debug/net7.0/TenGymServices.Shared.dll
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/bin/Debug/net7.0/TenGymServices.Shared.pdb
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/obj/Debug/net7.0/TenGymServices.Shared.csproj.AssemblyReference.cache
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/obj/Debug/net7.0/TenGymServices.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/obj/Debug/net7.0/TenGymServices.Shared.AssemblyInfoInputs.cache
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/obj/Debug/net7.0/TenGymServices.Shared.AssemblyInfo.cs
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/obj/Debug/net7.0/TenGymServices.Shared.csproj.CoreCompileInputs.cache
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/obj/Debug/net7.0/TenGymServices.Shared.dll
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/obj/Debug/net7.0/refint/TenGymServices.Shared.dll
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/obj/Debug/net7.0/TenGymServices.Shared.pdb
+/Users/livingstonreynoso/Documentos trabajo/Proyectos/TenGymServices/TenGymServices.Shared/obj/Debug/net7.0/ref/TenGymServices.Shared.dll

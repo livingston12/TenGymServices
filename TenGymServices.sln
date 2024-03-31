@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenGymServices.Api.Products", "TenGymServices.Api.Products\TenGymServices.Api.Products.csproj", "{33B6EE36-E631-4F83-86D2-7E2CA047CF18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenGymServices.Api.Plans", "TenGymServices.Api.Plans\TenGymServices.Api.Plans.csproj", "{46FFB5DB-AAC0-43E8-9417-68E423CFDC6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenGymServices.Api.Suscriptions", "TenGymServices.Api.Suscriptions\TenGymServices.Api.Suscriptions.csproj", "{4190D402-0BBC-4BD4-996A-401E34692482}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenGymServices.Shared", "TenGymServices.Shared\TenGymServices.Shared.csproj", "{8CA3CB93-48A1-49D0-A2CD-7E2D4469DB0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenGymServices.RabbitMq.Bus", "TenGymServices.RabbitMq.Bus\TenGymServices.RabbitMq.Bus.csproj", "{01BBA42B-9E91-4F6D-9981-6364AF7F8AC6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33B6EE36-E631-4F83-86D2-7E2CA047CF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33B6EE36-E631-4F83-86D2-7E2CA047CF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33B6EE36-E631-4F83-86D2-7E2CA047CF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33B6EE36-E631-4F83-86D2-7E2CA047CF18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46FFB5DB-AAC0-43E8-9417-68E423CFDC6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46FFB5DB-AAC0-43E8-9417-68E423CFDC6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46FFB5DB-AAC0-43E8-9417-68E423CFDC6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46FFB5DB-AAC0-43E8-9417-68E423CFDC6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4190D402-0BBC-4BD4-996A-401E34692482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4190D402-0BBC-4BD4-996A-401E34692482}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4190D402-0BBC-4BD4-996A-401E34692482}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4190D402-0BBC-4BD4-996A-401E34692482}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CA3CB93-48A1-49D0-A2CD-7E2D4469DB0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CA3CB93-48A1-49D0-A2CD-7E2D4469DB0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CA3CB93-48A1-49D0-A2CD-7E2D4469DB0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CA3CB93-48A1-49D0-A2CD-7E2D4469DB0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01BBA42B-9E91-4F6D-9981-6364AF7F8AC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01BBA42B-9E91-4F6D-9981-6364AF7F8AC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01BBA42B-9E91-4F6D-9981-6364AF7F8AC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01BBA42B-9E91-4F6D-9981-6364AF7F8AC6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
