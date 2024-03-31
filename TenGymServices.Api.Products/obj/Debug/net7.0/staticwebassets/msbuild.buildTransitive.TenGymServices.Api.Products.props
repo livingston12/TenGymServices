@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../buildMultiTargeting/TenGymServices.Api.Products.props" />
-</Project>
