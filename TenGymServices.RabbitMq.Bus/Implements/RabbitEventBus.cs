@@ -90,22 +90,27 @@ namespace TenGymServices.RabbitMq.Bus.Implements
 
                 consumer.Received += async (model, ea) =>
                 {
-                    var message = Encoding.UTF8.GetString(ea.Body.ToArray());
-                    var eventType = _eventTypes.SingleOrDefault(x => x.Name == eventName);
-                    var eventObject = JsonConvert.DeserializeObject(message, eventType);
-                    foreach (var handlerType in _handlers[eventName])
-                    {
-                        var handler = Activator.CreateInstance(handlerType);
-                        var handleMethod = handlerType.GetMethod("Handle");
-                        if (handleMethod != null)
-                        {
-                            await (Task)handleMethod.Invoke(handler, new[] { eventObject });
-                        }
-                    }
+                    await consumerDelegate(eventName, model, ea);
                 };
 
                 channel.BasicConsume(eventName, true, consumer);
                 _logger.LogInformation($"Subscribed to event {eventName} on exchange {Exchange}");
+            }
+        }
+
+        private async Task consumerDelegate(string eventName, object model, BasicDeliverEventArgs ea)
+        {
+            var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+            var eventType = _eventTypes.SingleOrDefault(x => x.Name == eventName);
+            var eventObject = JsonConvert.DeserializeObject(message, eventType);
+            foreach (var handlerType in _handlers[eventName])
+            {
+                var handler = Activator.CreateInstance(handlerType);
+                var handleMethod = handlerType.GetMethod("Handle");
+                if (handleMethod != null)
+                {
+                    await (Task)handleMethod.Invoke(handler, new[] { eventObject });
+                }
             }
         }
     }

@@ -21,7 +21,9 @@ namespace TenGymServices.Api.Products.Core.Utils
                 .ForMember(request => request.image_url, opt => opt.MapFrom((src, dest) => src.ImageUrl))
                 .ForMember(request => request.home_url, opt => opt.MapFrom((src, dest) => src.HomeUrl));
             CreateMap<ProductPaypalRequest, ProductEventQuee>()
-                .ForMember(request => request.PaypalId, opt => opt.MapFrom((src, dest) => src.paypal_id)); ;
+                .ForMember(request => request.PaypalId, opt => opt.MapFrom((src, dest) => src.paypal_id))
+                .ForMember(request => request.HomeUrl, opt => opt.MapFrom((src, dest) => src.home_url))
+                .ForMember(request => request.ImageUrl, opt => opt.MapFrom((src, dest) => src.image_url));
 
             CreateMap<CreateTaskCommand, ProductsEntity>();
             CreateMap<ProductsEntity, ProductDto>();
