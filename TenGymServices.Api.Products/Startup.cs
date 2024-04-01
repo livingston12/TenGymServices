@@ -26,9 +26,8 @@ namespace TenGymServices.Api.Products
 
         public void ConfigureServices(IServiceCollection services)
         {
-            
-            services.AddControllers();
 
+            services.AddControllers();
 
             services.AddAutoMapper(typeof(MapperProfiles));
 
@@ -65,14 +64,17 @@ namespace TenGymServices.Api.Products
             services.AddScoped<IPaypalProductService, PaypalService>();
             services.AddSingleton<ExceptionHandlerMiddleware>();
             services.AddSingleton<IPaypalAuthService, PaypalAuthService>();
-            services.AddTransient<IRabbitEventBus, RabbitEventBus>(x => 
+            services.AddTransient<IRabbitEventBus, RabbitEventBus>(x =>
             {
                 var mediator = x.GetService<IMediator>();
-                var rabbit = new RabbitEventBus(mediator)
+                var logger = x.GetService<ILogger<RabbitEventBus>>();
+                
+                var rabbit = new RabbitEventBus(mediator, logger)
                 {
-                    _hostName = "TenGym.Rabbitmq-web"
+                    HostName = "TenGym.Rabbitmq-web",
+                    Exchange = "TenGym.Product"
                 };
-                return (RabbitEventBus)rabbit;
+                return rabbit;
             });
 
             // Consume Rabbitmq
@@ -97,6 +99,8 @@ namespace TenGymServices.Api.Products
 
             // consume rabbitmq
             var eventBus = app.Services.GetRequiredService<IRabbitEventBus>();
+            eventBus.HostName = "TenGym.Rabbitmq-web";
+            eventBus.Exchange = "TenGym.Product";
             eventBus.Suscribe<ProductEventQuee, ProductEventHandler>();
 
         }

@@ -6,124 +6,107 @@ using RabbitMQ.Client.Events;
 using TenGymServices.RabbitMq.Bus.BusRabbit;
 using TenGymServices.RabbitMq.Bus.Commands;
 using TenGymServices.RabbitMq.Bus.Events;
+using Microsoft.Extensions.Logging;
 
-namespace TenGymServices.RabbitMq.Bus.Implements;
-
-public class RabbitEventBus : IRabbitEventBus
+namespace TenGymServices.RabbitMq.Bus.Implements
 {
-    private readonly IMediator _mediator;
-    private readonly Dictionary<string, List<Type>> _handlers;
-    private readonly List<Type> _eventTypes;
-    public string _hostName { get; set; }
-
-    public RabbitEventBus(IMediator mediator)
+    public class RabbitEventBus : IRabbitEventBus
     {
-        _mediator = mediator;
-        _handlers = new Dictionary<string, List<Type>>();
-        _eventTypes = new List<Type>();
-        _hostName ??= "localhost";
-    }
+        private readonly IMediator _mediator;
+        private readonly Dictionary<string, List<Type>> _handlers;
+        private readonly List<Type> _eventTypes;
+        public string HostName { get; set; }
+        public string Exchange { get; set; }
+        private readonly ILogger<RabbitEventBus> _logger;
 
-
-    // Publish or send the Queue
-    public void Publish<TEvent>(TEvent @event) where TEvent : Event
-    {
-        var factory = new ConnectionFactory() { HostName = _hostName };
-        using (var con = factory.CreateConnection())
-        using (var channel = con.CreateModel())
+        public RabbitEventBus(IMediator mediator, ILogger<RabbitEventBus> logger)
         {
-            var eventName = @event.GetType().Name;
-
-            channel.QueueDeclare(eventName, false, false, false, null);
-
-            var message = JsonConvert.SerializeObject(@event);
-            var body = Encoding.UTF8.GetBytes(message);
-
-            // Publish the queue
-            channel.BasicPublish("", eventName, null, body);
-        }
-    }
-
-    public Task SendCommand<TCommand>(TCommand command) where TCommand : Command
-    {
-        return _mediator.Send(command);
-    }
-
-    // Suscribe or consumer the Queue
-    public void Suscribe<TEvent, TEventHandler>()
-        where TEvent : Event
-        where TEventHandler : IEventHandler<TEvent>
-    {
-        // The name of the queue is the type of the objects
-        var eventName = typeof(TEvent).Name;
-        var EventhandlerType = typeof(TEventHandler);
-        // Create news event types
-        if (!_eventTypes.Contains(typeof(TEvent)))
-        {
-            _eventTypes.Add(typeof(TEvent));
+            _mediator = mediator;
+            _handlers = new Dictionary<string, List<Type>>();
+            _eventTypes = new List<Type>();
+            HostName ??= "localhost";
+            Exchange ??= "default";
+            _logger = logger;
         }
 
-        if (!_handlers.ContainsKey(eventName))
+        public void Publish<TEvent>(TEvent @event) where TEvent : Event
         {
-            _handlers.Add(eventName, new List<Type>());
-        }
-
-        // if the event was register before thow a exeption 
-        if (_handlers[eventName].Any(x => x.GetType() == EventhandlerType))
-        {
-            throw new ArgumentException($"The handler {EventhandlerType.Name} was inserted before by {eventName}");
-        }
-
-        _handlers[eventName].Add(EventhandlerType);
-
-        var factory = new ConnectionFactory()
-        {
-            HostName = _hostName,
-            DispatchConsumersAsync = true
-        };
-
-        var con = factory.CreateConnection();
-        var channel = con.CreateModel();
-
-        channel.QueueDeclare(eventName, false, false, false, null);
-        var consumer = new AsyncEventingBasicConsumer(channel);
-
-        consumer.Received += ConsumerDelegate;
-        channel.BasicConsume(eventName, true, consumer);
-    }
-
-    // Read the messages from queues
-    private async Task ConsumerDelegate(object sender, BasicDeliverEventArgs e)
-    {
-        var eventName = e.RoutingKey;
-        var message = Encoding.UTF8.GetString(e.Body.ToArray());
-        
-        try
-        {
-            if (_handlers.ContainsKey(eventName)) 
+            var factory = new ConnectionFactory() { HostName = HostName };
+            using (var con = factory.CreateConnection())
+            using (var channel = con.CreateModel())
             {
-                var subscriptions = _handlers[eventName];
-
-                foreach (var scb in subscriptions)
-                {
-                    var handler = Activator.CreateInstance(scb);
-                    if (handler == null) continue;
-                   
-                    var eventType = _eventTypes.SingleOrDefault(x => x.Name == eventName);
-                    var eventDS = JsonConvert.DeserializeObject(message, eventType);
-
-                    var concretType = typeof(IEventHandler<>).MakeGenericType(eventType);
-                    
-                    await (Task)concretType
-                            .GetMethod("Handle")
-                            .Invoke(handler, new object[] {eventDS});
-                }
+                channel.ExchangeDeclare(exchange: Exchange, type: ExchangeType.Fanout);
+                var eventName = @event.GetType().Name;
+                var message = JsonConvert.SerializeObject(@event);
+                var body = Encoding.UTF8.GetBytes(message);
+                channel.BasicPublish(Exchange, string.Empty, null, body);
+                _logger.LogInformation($"Published event {eventName} to exchange {Exchange}");
             }
         }
-        catch (Exception ex)
-        {
 
+        public Task SendCommand<TCommand>(TCommand command) where TCommand : Command
+        {
+            return _mediator.Send(command);
         }
 
+        public void Suscribe<TEvent, TEventHandler>()
+            where TEvent : Event
+            where TEventHandler : IEventHandler<TEvent>
+        {
+            var eventName = typeof(TEvent).Name;
+            _logger.LogInformation($"Subscribing to event {eventName}");
+            var eventHandlerType = typeof(TEventHandler);
+
+            if (!_eventTypes.Contains(typeof(TEvent)))
+            {
+                _eventTypes.Add(typeof(TEvent));
+            }
+
+            if (!_handlers.ContainsKey(eventName))
+            {
+                _handlers.Add(eventName, new List<Type>());
+            }
+
+            if (_handlers[eventName].Any(x => x == eventHandlerType))
+            {
+                throw new ArgumentException($"The handler {eventHandlerType.Name} was already registered for event {eventName}");
+            }
+
+            _handlers[eventName].Add(eventHandlerType);
+
+            var factory = new ConnectionFactory()
+            {
+                HostName = HostName,
+                DispatchConsumersAsync = true
+            };
+
+            using (var con = factory.CreateConnection())
+            using (var channel = con.CreateModel())
+            {
+                channel.ExchangeDeclare(exchange: Exchange, type: ExchangeType.Fanout);
+                channel.QueueDeclare(eventName, true, false, false, null);
+                channel.QueueBind(queue: eventName, exchange: Exchange, routingKey: "");
+                var consumer = new AsyncEventingBasicConsumer(channel);
+
+                consumer.Received += async (model, ea) =>
+                {
+                    var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+                    var eventType = _eventTypes.SingleOrDefault(x => x.Name == eventName);
+                    var eventObject = JsonConvert.DeserializeObject(message, eventType);
+                    foreach (var handlerType in _handlers[eventName])
+                    {
+                        var handler = Activator.CreateInstance(handlerType);
+                        var handleMethod = handlerType.GetMethod("Handle");
+                        if (handleMethod != null)
+                        {
+                            await (Task)handleMethod.Invoke(handler, new[] { eventObject });
+                        }
+                    }
+                };
+
+                channel.BasicConsume(eventName, true, consumer);
+                _logger.LogInformation($"Subscribed to event {eventName} on exchange {Exchange}");
+            }
+        }
     }
 }
