@@ -26,9 +26,8 @@ namespace TenGymServices.Api.Products
 
         public void ConfigureServices(IServiceCollection services)
         {
-            
-            services.AddControllers();
 
+            services.AddControllers();
 
             services.AddAutoMapper(typeof(MapperProfiles));
 
@@ -65,15 +64,20 @@ namespace TenGymServices.Api.Products
             services.AddScoped<IPaypalProductService, PaypalService>();
             services.AddSingleton<ExceptionHandlerMiddleware>();
             services.AddSingleton<IPaypalAuthService, PaypalAuthService>();
-            services.AddTransient<IRabbitEventBus, RabbitEventBus>(x => 
+            services.AddSingleton<IRabbitEventBus, RabbitEventBus>(x =>
             {
                 var mediator = x.GetService<IMediator>();
-                var rabbit = new RabbitEventBus(mediator)
+                var logger = x.GetService<ILogger<RabbitEventBus>>();
+                var scopeFactory = x.GetService<IServiceScopeFactory>();
+                
+                var rabbit = new RabbitEventBus(mediator, scopeFactory)
                 {
-                    _hostName = "TenGym.Rabbitmq-web"
+                    HostName = "TenGym.Rabbitmq-web"
                 };
-                return (RabbitEventBus)rabbit;
+                return rabbit;
             });
+
+            services.AddTransient<ProductEventHandler>();
 
             // Consume Rabbitmq
             services.AddTransient<IEventHandler<ProductEventQuee>, ProductEventHandler>();
@@ -89,7 +93,7 @@ namespace TenGymServices.Api.Products
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
@@ -97,6 +101,8 @@ namespace TenGymServices.Api.Products
 
             // consume rabbitmq
             var eventBus = app.Services.GetRequiredService<IRabbitEventBus>();
+            //eventBus.HostName = "TenGym.Rabbitmq-web";
+            //eventBus.Exchange = "TenGym.Product";
             eventBus.Suscribe<ProductEventQuee, ProductEventHandler>();
 
         }

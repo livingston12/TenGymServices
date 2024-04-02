@@ -1,5 +1,6 @@
 using System.Text;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -14,21 +15,23 @@ public class RabbitEventBus : IRabbitEventBus
     private readonly IMediator _mediator;
     private readonly Dictionary<string, List<Type>> _handlers;
     private readonly List<Type> _eventTypes;
-    public string _hostName { get; set; }
+    public string HostName {get; set;}
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public RabbitEventBus(IMediator mediator)
+    public RabbitEventBus(IMediator mediator, IServiceScopeFactory serviceScopeFactory)
     {
         _mediator = mediator;
         _handlers = new Dictionary<string, List<Type>>();
         _eventTypes = new List<Type>();
-        _hostName ??= "localhost";
+        HostName ??= "localhost";
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
 
     // Publish or send the Queue
     public void Publish<TEvent>(TEvent @event) where TEvent : Event
     {
-        var factory = new ConnectionFactory() { HostName = _hostName };
+        var factory = new ConnectionFactory() { HostName = HostName };
         using (var con = factory.CreateConnection())
         using (var channel = con.CreateModel())
         {
@@ -78,7 +81,7 @@ public class RabbitEventBus : IRabbitEventBus
 
         var factory = new ConnectionFactory()
         {
-            HostName = _hostName,
+            HostName = HostName,
             DispatchConsumersAsync = true
         };
 
@@ -102,11 +105,13 @@ public class RabbitEventBus : IRabbitEventBus
         {
             if (_handlers.ContainsKey(eventName)) 
             {
-                var subscriptions = _handlers[eventName];
+                using(var scope = _serviceScopeFactory.CreateScope())
+                {
+                     var subscriptions = _handlers[eventName];
 
                 foreach (var scb in subscriptions)
                 {
-                    var handler = Activator.CreateInstance(scb);
+                    var handler = scope.ServiceProvider.GetService(scb);
                     if (handler == null) continue;
                    
                     var eventType = _eventTypes.SingleOrDefault(x => x.Name == eventName);
@@ -118,6 +123,8 @@ public class RabbitEventBus : IRabbitEventBus
                             .GetMethod("Handle")
                             .Invoke(handler, new object[] {eventDS});
                 }
+                }
+               
             }
         }
         catch (Exception ex)

@@ -3,9 +3,8 @@ using TenGymServices.RabbitMq.Bus.Events;
 
 namespace TenGymServices.RabbitMq.Bus.BusRabbit
 {
-    public interface IRabbitEventBus
+    public interface IRabbitEventBus : IConfigurationRabbitmq
     {
-        public string _hostName { get; set; }
         Task SendCommand<TCommand>(TCommand command) where TCommand : Command;
         void Publish<TEvent>(TEvent @event) where TEvent : Event;
         void Suscribe<TEvent, TEventHandler>() where TEvent : Event
