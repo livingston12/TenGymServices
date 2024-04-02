@@ -27,7 +27,7 @@ namespace TenGymServices.Api.Products.Core.Utils
 
             CreateMap<CreateTaskCommand, ProductsEntity>();
             CreateMap<ProductsEntity, ProductDto>();
-
+            CreateMap<ProductEventQuee, ProductsEntity>();
         }
     }
 }
