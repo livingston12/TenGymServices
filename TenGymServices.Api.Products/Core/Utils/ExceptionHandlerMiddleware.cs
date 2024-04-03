@@ -1,6 +1,7 @@
 
 using System.Net;
 using Newtonsoft.Json;
+using TenGymServices.Shared.Core.Extentions;
 using TenGymServices.Shared.Core.Utils;
 
 namespace TenGymServices.Api.Products.Core.Utils
@@ -17,6 +18,23 @@ namespace TenGymServices.Api.Products.Core.Utils
             {
                 var response = new { ErrorMessage = ex.Message.Split("\n").Where(x => x.Length > 0) };
                 await WriteAsync(context, HttpStatusCode.BadRequest, response);
+            }
+            catch (HttpHandlerExeption ex)
+            {
+                var response = new { ErrorMessage = ex.Message };
+                var messageParser = ex.Message.Split('+');
+                if (messageParser.Length > 1)
+                {
+                    var errorMessage = messageParser[0];
+                    int.TryParse(messageParser[1], out int StatusCode );
+                    var httpCode = StatusCode.GetEnumStatusCode();
+                    response = new { ErrorMessage = errorMessage };
+                    
+                    await WriteAsync(context, httpCode, response);
+                    return;
+                }
+
+                await WriteAsync(context, HttpStatusCode.InternalServerError, response);
             }
             catch (Exception ex)
             {

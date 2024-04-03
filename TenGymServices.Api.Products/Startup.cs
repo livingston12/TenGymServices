@@ -27,7 +27,8 @@ namespace TenGymServices.Api.Products
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+            .AddNewtonsoftJson();
 
             services.AddAutoMapper(typeof(MapperProfiles));
 
@@ -69,7 +70,6 @@ namespace TenGymServices.Api.Products
                 var mediator = x.GetService<IMediator>();
                 var logger = x.GetService<ILogger<RabbitEventBus>>();
                 var scopeFactory = x.GetService<IServiceScopeFactory>();
-                
                 var rabbit = new RabbitEventBus(mediator, scopeFactory)
                 {
                     HostName = "TenGym.Rabbitmq-web"
@@ -86,6 +86,20 @@ namespace TenGymServices.Api.Products
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var dbContext = services.GetRequiredService<ProductContext>();
+                    dbContext.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Startup>>();
+                    logger.LogError(ex, "Migration Failed");
+                }
+            }
             app.UseMiddleware<ExceptionHandlerMiddleware>();
             if (env.IsDevelopment())
             {
