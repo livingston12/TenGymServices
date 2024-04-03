@@ -21,7 +21,6 @@ namespace TenGymServices.Api.Products.Aplication.Products
         {
             private readonly ProductContext _context;
             private readonly IMapper _mapper;
-            private readonly IHttpContextAccessor _httpContextAccesor;
 
             public UpdateProductHandler(ProductContext context, IMapper mapper)
             {
