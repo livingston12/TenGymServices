@@ -17,16 +17,36 @@ services:
       - rabbitmq-log:/var/log/rabbitmq
     user: "root"
   # =============== Databases ===============
-  sql-server-product-db:
+  sql-server-product-db: #Product
     image: mcr.microsoft.com/mssql/server
     container_name: TenGymServices.Database.Products
     ports:
       - 1433:1433
     environment:
-      - SA_PASSWORD=YOUR_PASS
+      - SA_PASSWORD=5Gyj35m^
       - ACCEPT_EULA=Y
+      - MSSQL_MEMORY_LIMIT_MB=200
     networks:
       - tengymservicesnet
+    volumes:
+      - sqlDataProduct:/var/opt/mssql
+    mem_limit: 500M
+    cpus: 2
+  sql-server-plan-db: #plan
+    image: mcr.microsoft.com/mssql/server
+    container_name: TenGymServices.Database.Plans
+    ports:
+      - 1434:1433
+    environment:
+      - SA_PASSWORD=5Gyj35m^
+      - ACCEPT_EULA=Y
+      - MSSQL_MEMORY_LIMIT_MB=200
+    networks:
+      - tengymservicesnet
+    volumes:
+      - sqlDataPlan:/var/opt/mssql
+    mem_limit: 500M
+    cpus: 2
   # =============== Microservices ===============
   tengymservicesapiproducts:
     image: ${DOCKER_REGITRY-}tengymservicesapiproducts
@@ -48,11 +68,17 @@ services:
       dockerfile: TenGymServices.Api.Plans/Dockerfile
     ports:
       - 6002:6002
+    container_name: "TenGymServices.Api.Plans"
     networks:
       - tengymservicesnet
+    depends_on:
+      - sql-server-plan-db
+      - rabbitmq
 networks:
   tengymservicesnet:
     external: true
 volumes:
   rabbitmq-data:
   rabbitmq-log:
+  sqlDataProduct:
+  sqlDataPlan:
