@@ -16,7 +16,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
       - rabbitmq-log:/var/log/rabbitmq
     user: "root"
-# =============== Databases ===============
+  # =============== Databases ===============
   sql-server-product-db:
     image: mcr.microsoft.com/mssql/server
     container_name: TenGymServices.Database.Products
@@ -27,7 +27,7 @@ services:
       - ACCEPT_EULA=Y
     networks:
       - tengymservicesnet
-# =============== Microservices ===============
+  # =============== Microservices ===============
   tengymservicesapiproducts:
     image: ${DOCKER_REGITRY-}tengymservicesapiproducts
     build:
@@ -41,10 +41,18 @@ services:
     depends_on:
       - sql-server-product-db
       - rabbitmq
+  tengymservicesapiplans:
+    image: ${DOCKER_REGITRY-}tengymservicesapiplans
+    build:
+      context: .
+      dockerfile: TenGymServices.Api.Plans/Dockerfile
+    ports:
+      - 6002:6002
+    networks:
+      - tengymservicesnet
 networks:
   tengymservicesnet:
     external: true
 volumes:
   rabbitmq-data:
   rabbitmq-log:
-    
