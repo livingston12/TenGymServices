@@ -9,6 +9,6 @@ namespace TenGymServices.Api.Plans.Core.Entities
         public int PaymentPreferenceId { get; set; }
         public string CurrencyCode { get; set; }
         public string Value { get; set; }
-        public PaymentPreferencesEntity PaymentPreference { get; set; }
+        public PaymentPreferenceEntity PaymentPreference { get; set; }
     }
 }

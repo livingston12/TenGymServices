@@ -3,7 +3,7 @@ using TenGymServices.Api.Plans.Core.Enums;
 
 namespace TenGymServices.Api.Plans.Core.Entities
 {
-    public class PlansEntity
+    public class PlanEntity
     {
         [Key]
         public int PlanId { get; set; }
@@ -14,9 +14,9 @@ namespace TenGymServices.Api.Plans.Core.Entities
         public string Description { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime UpdateTime { get; set; }
-        public List<BillingCyclesEntity> BillingCycles { get; set; }
-        public PaymentPreferencesEntity PaymentPreference { get; set; }
-        public TaxesEntity Tax { get; set; }
+        public List<BillingCycleEntity> BillingCycles { get; set; }
+        public PaymentPreferenceEntity PaymentPreference { get; set; }
+        public TaxEntity Tax { get; set; }
     }
 
 }

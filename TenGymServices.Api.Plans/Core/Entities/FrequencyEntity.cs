@@ -10,6 +10,6 @@ namespace TenGymServices.Api.Plans.Core.Entities
         public int BillingCycleId { get; set; }
         public INTERVAL_UNIT IntervalUnit { get; set; }
         public int IntervalCount { get; set; }
-        public BillingCyclesEntity billingCycle { get; set; }
+        public BillingCycleEntity billingCycle { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace TenGymServices.Api.Plans.Core.Entities
         public int PricingSchemeId { get; set; }
         public int BillingCycleId { get; set; }
         public FixedPriceEntity FixedPrice { get; set; }
-        public BillingCyclesEntity BillingCycle { get; set; }
+        public BillingCycleEntity BillingCycle { get; set; }
     }
 }

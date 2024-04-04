@@ -6,7 +6,7 @@ namespace TenGymServices.Api.Plans.Aplication.Plans
 {
     public class Post
     {
-        // Create Plan
+        #region Create Plan
         public class CreatePlanRequest : CreatePlansDto, IRequest
         {
 
@@ -19,10 +19,10 @@ namespace TenGymServices.Api.Plans.Aplication.Plans
                 throw new NotImplementedException();
             }
         }
+        #endregion
 
 
-
-        // Desactive Plan
+        #region Desactive Plan
 
         public class DesactivatePlanRequest : IRequest, IPlanId
         {
@@ -37,8 +37,9 @@ namespace TenGymServices.Api.Plans.Aplication.Plans
                 throw new NotImplementedException();
             }
         }
+        #endregion
 
-        // Active Plan
+        #region  Active Plan
         public class ActivatePlanRequest : IRequest, IPlanId
         {
             public int PlanId { get; set; }
@@ -51,8 +52,9 @@ namespace TenGymServices.Api.Plans.Aplication.Plans
                 throw new NotImplementedException();
             }
         }
+        #endregion
 
-        // Update Pricing
+        #region  Update Pricing
         public class UpdatePricingPlanRequest : UpdatePricingPlanDto, IRequest
         {
 
@@ -65,5 +67,6 @@ namespace TenGymServices.Api.Plans.Aplication.Plans
                 throw new NotImplementedException();
             }
         }
+        #endregion
     }
 }

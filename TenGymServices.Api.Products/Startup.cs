@@ -10,6 +10,7 @@ using TenGymServices.Api.Products.Services;
 using TenGymServices.RabbitMq.Bus.BusRabbit;
 using TenGymServices.RabbitMq.Bus.EventQuees;
 using TenGymServices.RabbitMq.Bus.Implements;
+using TenGymServices.Shared.Core.Extentions;
 using TenGymServices.Shared.Core.Interfaces;
 using TenGymServices.Shared.Implements;
 
@@ -86,19 +87,15 @@ namespace TenGymServices.Api.Products
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
-            using (var scope = app.Services.CreateScope())
+            try
             {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var dbContext = services.GetRequiredService<ProductContext>();
-                    dbContext.Database.Migrate();
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Startup>>();
-                    logger.LogError(ex, "Migration Failed");
-                }
+                var context = app.Services.GetRequiredService<ProductContext>();
+                app.MigrateDatabase<ProductContext>();
+            }
+            catch (Exception ex)
+            {
+                var logger = app.Services.GetRequiredService<ILogger<Startup>>();
+                logger.LogError(ex, "Migration Failed");
             }
             app.UseMiddleware<ExceptionHandlerMiddleware>();
             if (env.IsDevelopment())

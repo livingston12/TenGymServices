@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TenGymServices.Api.Plans.Core.Filters;
+using TenGymServices.Api.Plans.Persistence;
+using TenGymServices.Shared.Core.Extentions;
 
 namespace TenGymServices.Api.Plans
 {
@@ -16,6 +19,11 @@ namespace TenGymServices.Api.Plans
         {
             services.AddControllers();
             services.AddEndpointsApiExplorer();
+            services.AddDbContext<PlanContext>(cfg =>
+            {
+                cfg.UseSqlServer(_configuration.GetConnectionString("PlanDatabase"));
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TenGymServices Plans", Version = "v1" });
@@ -25,11 +33,21 @@ namespace TenGymServices.Api.Plans
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
+            try
+            {
+                var context = app.Services.GetRequiredService<PlanContext>();
+                app.MigrateDatabase<PlanContext>();
+            }
+            catch (Exception ex)
+            {
+                var logger = app.Services.GetRequiredService<ILogger<Startup>>();
+                logger.LogError(ex, "Migration Failed");
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
                 c.SwaggerEndpoint("/swagger/v1/swagger.json",
-                      "WebApiDevoTo v1"));
+                      "TenGymServices Plans v1"));
 
             app.UseReDoc();
 

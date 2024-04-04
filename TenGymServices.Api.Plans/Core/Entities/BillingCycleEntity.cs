@@ -3,7 +3,7 @@ using TenGymServices.Api.Plans.Core.Enums;
 
 namespace TenGymServices.Api.Plans.Core.Entities
 {
-    public class BillingCyclesEntity
+    public class BillingCycleEntity
     {
         [Key]
         public int BillingCycleId { get; set; }
@@ -13,6 +13,6 @@ namespace TenGymServices.Api.Plans.Core.Entities
         public int TotalCycles { get; set; }
         public PricingSchemeEntity PricingScheme { get; set; }
         public FrequencyEntity Frequency { get; set; }
-        public PlansEntity Plan { get; set; }
+        public PlanEntity Plan { get; set; }
     }
 }

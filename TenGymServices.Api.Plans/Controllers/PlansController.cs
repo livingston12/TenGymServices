@@ -21,25 +21,25 @@ namespace TenGymServices.Api.Plans.Controllers
         }
 
         [HttpGet("{ProductPaypalId}")]
-        public async Task GetPlans([FromRoute] Get.GetPlans request)
+        public async Task GetPlans([FromQuery] Get.GetPlans request)
         {
             await _mediator.Send(request, new CancellationToken());
         }
 
-        [HttpGet("{ProductPaypalId:int}")]
-        public async Task GetPlansById([FromRoute] Get.GetPlans request)
+        [HttpGet("{PlanId:int}")]
+        public async Task GetPlansById([FromRoute] Get.GetPlansById request)
         {
             await _mediator.Send(request, new CancellationToken());
         }
 
-        [HttpGet("{ProductPaypalId:int}/deactivate")]
-        public async Task DesactivePlan([FromRoute] Post.ActivePlanHandler request)
+        [HttpPost("{PlanId:int}/deactivate")]
+        public async Task DesactivePlan([FromRoute] Post.DesactivatePlanRequest request)
         {
             await _mediator.Send(request, new CancellationToken());
         }
 
-        [HttpGet("{ProductPaypalId:int}/activate")]
-        public async Task ActivatePlan([FromRoute] Get.GetPlans request)
+        [HttpPost("{PlanId:int}/activate")]
+        public async Task ActivatePlan([FromRoute] Post.ActivatePlanRequest request)
         {
             await _mediator.Send(request, new CancellationToken());
         }
