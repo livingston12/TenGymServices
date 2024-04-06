@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Newtonsoft.Json.Converters;
 using TenGymServices.Api.Plans.Core.Enums;
+using TenGymServices.RabbitMq.Bus.Events;
 
 namespace TenGymServices.Api.Plans.Core.Dtos
 {
-    public class CreatePlansDto
+    public class CreatePlansDto : Event
     {
         public string ProductPaypalId { get; set; }
         public string Name { get; set; }
