@@ -45,7 +45,7 @@ namespace TenGymServices.Api.Plans.Aplication.ExternalServices
             throw new NotImplementedException();
         }
 
-        public Task PatchPlan(int planId)
+        public Task<(bool hasEerror, string Id, string MessageError)> PatchPlan(string planId, PatchPlanDto planDto)
         {
             throw new NotImplementedException();
         }

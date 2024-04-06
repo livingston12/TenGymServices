@@ -6,6 +6,6 @@ namespace TenGymServices.Api.Plans.Aplication.Commands
 {
     public class CreatePlanCommand : CreatePlansDto, IRequest
     {
-    
+        public string PaypalId { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace TenGymServices.Api.Plans.EventQuee
     {
 
         public List<UpdatePricingSchemePlanQuee> ListPricingPlans { get; set; }
-        public string PlanId { get; set; }
+        public int PlanId { get; set; }
     }
 
     public class UpdatePricingSchemePlanQuee
