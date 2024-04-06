@@ -20,7 +20,10 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
 
         public async Task<List<PlanDto>> Handle(GetAllPlanQuery request, CancellationToken cancellationToken)
         {
-            var list = await _context.Plans.ToListAsync(cancellationToken);
+            var list = await _context.Plans
+                .Where(x => x.ProductPaypalId == request.ProductPaypalId)
+                .ToListAsync(cancellationToken);
+            
             var productDto = _mapper.Map<List<PlanEntity>, List<PlanDto>>(list);
 
             return productDto;

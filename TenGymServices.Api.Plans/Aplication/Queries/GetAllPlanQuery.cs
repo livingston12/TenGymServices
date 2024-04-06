@@ -3,5 +3,8 @@ using TenGymServices.Api.Plans.Core.Dtos;
 
 namespace TenGymServices.Api.Plans.Aplication.Queries
 {
-    public record GetAllPlanQuery(string ProductPaypalId) : IRequest<List<PlanDto>>;
+    public record GetAllPlanQuery : IRequest<List<PlanDto>> 
+    {
+        public string ProductPaypalId { get; init; } = string.Empty;
+    }
 }
