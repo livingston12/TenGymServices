@@ -57,7 +57,7 @@ services:
     networks:
       - tengymservicesnet
     depends_on:
-      - sql-server-product-db
+      - sql-server-catalog-db
       - rabbitmq
 networks:
   tengymservicesnet:

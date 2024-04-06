@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TenGymServices.Api.Plans.Aplication.Plans;
+using TenGymServices.Api.Plans.Aplication.Commands;
+using TenGymServices.Api.Plans.Aplication.Queries;
 
 namespace TenGymServices.Api.Plans.Controllers
 {
@@ -15,31 +16,31 @@ namespace TenGymServices.Api.Plans.Controllers
         }
 
         [HttpPost]
-        public async Task CreatePlan(Post.CreatePlanRequest request)
+        public async Task CreatePlan(CreatePlanCommand request)
         {
             await _mediator.Send(request, new CancellationToken());
         }
 
         [HttpGet("{ProductPaypalId}")]
-        public async Task GetPlans([FromQuery] Get.GetPlans request)
+        public async Task GetPlans([FromQuery] GetAllPlanQuery request)
         {
             await _mediator.Send(request, new CancellationToken());
         }
 
         [HttpGet("{PlanId:int}")]
-        public async Task GetPlansById([FromRoute] Get.GetPlansById request)
+        public async Task GetPlansById([FromRoute] GetByIdPlanQuery request)
         {
             await _mediator.Send(request, new CancellationToken());
         }
 
         [HttpPost("{PlanId:int}/deactivate")]
-        public async Task DesactivePlan([FromRoute] Post.DesactivatePlanRequest request)
+        public async Task DesactivePlan([FromRoute] DesactivatePlanCommand request)
         {
             await _mediator.Send(request, new CancellationToken());
         }
 
         [HttpPost("{PlanId:int}/activate")]
-        public async Task ActivatePlan([FromRoute] Post.ActivatePlanRequest request)
+        public async Task ActivatePlan([FromRoute] ActivatePlanCommand request)
         {
             await _mediator.Send(request, new CancellationToken());
         }
