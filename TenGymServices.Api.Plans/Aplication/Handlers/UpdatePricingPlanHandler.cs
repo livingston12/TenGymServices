@@ -28,7 +28,7 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
         public async Task Handle(UpdatePricingPlanCommand request, CancellationToken cancellationToken)
         {
             request.ValidateRequest<UpdatePricingPlanCommand, UpatePricingPlanValidator>();
-            var plan = await _mediator.Send(new GetByIdPlanQuery(request.PlanId) {}, cancellationToken);
+            var plan = await _mediator.Send(new GetByIdPlanQuery() { PlanId = request.PlanId}, cancellationToken);
             
             var responsePaypal = await _paypalService.PostAsync(request, $"/v1/billing/plans/{plan.PaypalId}/update-pricing-schemes");
             if (responsePaypal.hasEerror)

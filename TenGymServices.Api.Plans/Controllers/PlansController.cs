@@ -21,8 +21,8 @@ namespace TenGymServices.Api.Plans.Controllers
             await _mediator.Send(request, new CancellationToken());
         }
 
-        [HttpGet("{ProductPaypalId}")]
-        public async Task GetPlans([FromQuery] GetAllPlanQuery request)
+        [HttpGet()]
+        public async Task GetPlans([FromHeader] GetAllPlanQuery request)
         {
             await _mediator.Send(request, new CancellationToken());
         }

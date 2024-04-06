@@ -24,7 +24,7 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
         }
         public async Task Handle(DesactivatePlanCommand request, CancellationToken cancellationToken)
         {
-            var plan = await _mediator.Send(new GetByIdPlanQuery(request.PlanId) {}, cancellationToken);
+            var plan = await _mediator.Send(new GetByIdPlanQuery{ PlanId = request.PlanId}, cancellationToken);
 
             var responsePaypal = await _paypalService.PostAsync(request, $"/v1/billing/plans/{plan.PaypalId}/deactivate");
             if (responsePaypal.hasEerror)

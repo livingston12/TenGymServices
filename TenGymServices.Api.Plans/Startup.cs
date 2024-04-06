@@ -1,8 +1,12 @@
+using System.Net.Http.Headers;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TenGymServices.Api.Plans.Core.Filters;
+using TenGymServices.Api.Plans.Core.Utils;
 using TenGymServices.Api.Plans.Persistence;
 using TenGymServices.Shared.Core.Extentions;
+using TenGymServices.Shared.Core.Interfaces;
 
 namespace TenGymServices.Api.Plans
 {
@@ -17,18 +21,47 @@ namespace TenGymServices.Api.Plans
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson();;
             services.AddEndpointsApiExplorer();
-            services.AddDbContext<PlanContext>(cfg =>
-            {
-                cfg.UseSqlServer(_configuration.GetConnectionString("PlanDatabase"));
-            });
-
+            
+            // Add Fluent Validation
+            services
+                .AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
+                
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TenGymServices Plans", Version = "v1" });
                 c.SchemaFilter<EnumSchemaFilter>();
             });
+
+            services.AddDbContext<PlanContext>(cfg =>
+            {
+                cfg.UseSqlServer(_configuration.GetConnectionString("PlanDatabase"));
+            });
+
+            // Add http client to consumer paypal
+            services.AddHttpClient("PaypalClient", opt =>
+          {
+              opt.BaseAddress = new Uri(_configuration["Services:BasePaypalUrl"].ToString());
+          })
+          .ConfigureHttpClient(async (services, client) =>
+          {
+              client.DefaultRequestHeaders.Add("PayPal-Request-Id", Guid.NewGuid().ToString());
+              client.DefaultRequestHeaders.Add("Prefer", "return=representation");
+
+              // Get Token for each request
+              var serviceProvider = services.GetRequiredService<IServiceProvider>();
+              var paypalService = serviceProvider.GetRequiredService<IPaypalAuthService>();
+              string token = await paypalService.GenerateToken(client, _configuration["Paypal:ClientId"], _configuration["Paypal:SecretId"]);
+              client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+          });
+
+            services.AddAutoMapper(typeof(MapperProfiles));
+
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly)); // Add MediaTR 
+            services.AddServicesLifeCycles();
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
@@ -56,6 +89,8 @@ namespace TenGymServices.Api.Plans
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>(); // Use manage Exception
         }
     }
 }

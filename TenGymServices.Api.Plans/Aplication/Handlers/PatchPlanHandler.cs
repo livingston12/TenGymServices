@@ -17,14 +17,13 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
         private readonly IMapper _mapper;
         private readonly IRabbitEventBus _rabbitEventBus;
         private readonly IMediator _mediator;
-        private readonly ILogger _logger;
+        private readonly ILogger<PatchPlanHandler> _logger;
 
         public PatchPlanHandler(IPaypalPlansService<PatchPlanCommand> paypalService,
             IMapper mapper,
-            IRabbitEventBus rabbitEventBus
-,
+            IRabbitEventBus rabbitEventBus,
             IMediator mediator,
-            ILogger logger)
+            ILogger<PatchPlanHandler> logger)
         {
             _paypalService = paypalService;
             _mapper = mapper;
@@ -36,7 +35,7 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
 
         public async Task Handle(PatchPlanCommand request, CancellationToken cancellationToken)
         {
-            var plan = await _mediator.Send(new GetByIdPlanQuery(request.PlanId) { }, cancellationToken);
+            var plan = await _mediator.Send(new GetByIdPlanQuery() { PlanId = request.PlanId }, cancellationToken);
 
             if (request.PatchDocument == null)
             {
