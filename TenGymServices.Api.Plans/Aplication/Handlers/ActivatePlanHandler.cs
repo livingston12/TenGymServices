@@ -1,9 +1,11 @@
+using System.Net;
 using MediatR;
 using TenGymServices.Api.Plans.Aplication.Commands;
 using TenGymServices.Api.Plans.Aplication.Queries;
 using TenGymServices.Api.Plans.Core.Interfaces;
 using TenGymServices.Api.Plans.EventQuee;
 using TenGymServices.RabbitMq.Bus.BusRabbit;
+using TenGymServices.Shared.Core.Extentions;
 
 namespace TenGymServices.Api.Plans.Aplication.Handlers
 {
@@ -29,7 +31,7 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
             var responsePaypal = await _paypalService.PostAsync(request, $"/v1/billing/plans/{plan.PaypalId}/activate");
             if (responsePaypal.hasEerror)
             {
-                throw new Exception(responsePaypal.MessageError);
+                request.ThrowHttpHandlerExeption(responsePaypal.MessageError, HttpStatusCode.BadRequest);
             }
 
             var dataQuee = new ActivatePlanQuee() { PlanPaypalId = responsePaypal.Id};

@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using MediatR;
 using TenGymServices.Api.Plans.Aplication.Commands;
@@ -31,7 +32,7 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
             var responsePaypal = await _paypalService.PostAsync(request, "/v1/billing/plans/");
             if (responsePaypal.hasEerror)
             {
-                throw new Exception(responsePaypal.MessageError);
+                request.ThrowHttpHandlerExeption(responsePaypal.MessageError, HttpStatusCode.BadRequest);
             }
 
             var dataQuee = _mapper.Map<CreatePlanCommand, PlanEventQuee>(request);

@@ -1,9 +1,11 @@
+using System.Net;
 using AutoMapper;
 using TenGymServices.Api.Products.Models.Dtos;
 using TenGymServices.Api.Products.Models.Entities;
 using TenGymServices.Api.Products.Persistence;
 using TenGymServices.RabbitMq.Bus.BusRabbit;
 using TenGymServices.RabbitMq.Bus.EventQuees;
+using TenGymServices.Shared.Core.Extentions;
 
 namespace TenGymServices.Api.Products.HandlerRabiitmq
 {
@@ -52,7 +54,8 @@ namespace TenGymServices.Api.Products.HandlerRabiitmq
             }
             else
             {
-                throw new Exception("Cannot insert the the product");
+                request.ThrowHttpHandlerExeption("Cannot insert the the product", HttpStatusCode.BadRequest);
+                return null;
             }
         }
 

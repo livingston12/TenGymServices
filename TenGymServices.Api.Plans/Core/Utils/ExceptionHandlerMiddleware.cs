@@ -44,7 +44,7 @@ namespace TenGymServices.Api.Plans.Core.Utils
             catch (Exception ex)
             {
                 var response = new { ErrorMessage = "Internal server error please contact support" };
-                if (!_env.IsDevelopment()) 
+                if (_env.IsDevelopment()) 
                 {
                     response = new { ErrorMessage = ex.Message };
                 }

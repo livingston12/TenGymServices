@@ -1,3 +1,4 @@
+using System.Net;
 using MediatR;
 using TenGymServices.Api.Plans.Aplication.Commands;
 using TenGymServices.Api.Plans.Aplication.Commands.Validators;
@@ -33,7 +34,7 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
             var responsePaypal = await _paypalService.PostAsync(request, $"/v1/billing/plans/{plan.PaypalId}/update-pricing-schemes");
             if (responsePaypal.hasEerror)
             {
-                throw new Exception(responsePaypal.MessageError);
+               request.ThrowHttpHandlerExeption(responsePaypal.MessageError, HttpStatusCode.BadRequest);
             }
             UpdatePricingPlanQuee dataQuee = new UpdatePricingPlanQuee
             {
