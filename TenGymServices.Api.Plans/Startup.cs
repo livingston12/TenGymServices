@@ -21,20 +21,20 @@ namespace TenGymServices.Api.Plans
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddNewtonsoftJson();;
-            services.AddEndpointsApiExplorer();
-            
-            // Add Fluent Validation
+            services.AddSwaggerGen(c =>
+           {
+               c.SwaggerDoc("v1", new OpenApiInfo { Title = "TenGymServices Plans", Version = "v1" });
+               c.SchemaFilter<CustomSchemaFilter>();
+           });
+           services.AddSwaggerGenNewtonsoftSupport();
+
+           // Add Fluent Validation
             services
                 .AddFluentValidationAutoValidation()
                 .AddFluentValidationClientsideAdapters();
-                
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TenGymServices Plans", Version = "v1" });
-                c.SchemaFilter<EnumSchemaFilter>();
-            });
+            
+            services.AddControllers().AddNewtonsoftJson();
+            services.AddEndpointsApiExplorer();
 
             services.AddDbContext<PlanContext>(cfg =>
             {
@@ -76,21 +76,24 @@ namespace TenGymServices.Api.Plans
                 var logger = app.Services.GetRequiredService<ILogger<Startup>>();
                 logger.LogError(ex, "Migration Failed");
             }
-
+            app.UseMiddleware<ExceptionHandlerMiddleware>(); // Use manage Exception
+            app.UseHttpsRedirection();
+            app.UseAuthorization();            
+            app.MapControllers();
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
-                c.SwaggerEndpoint("/swagger/v1/swagger.json",
-                      "TenGymServices Plans v1"));
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TenGymServices Plans v1");
+            });
+
 
             app.UseReDoc();
 
-            app.UseHttpsRedirection();
 
-            app.UseAuthorization();
 
-            app.MapControllers();
 
-            app.UseMiddleware<ExceptionHandlerMiddleware>(); // Use manage Exception
+            
         }
     }
 }
