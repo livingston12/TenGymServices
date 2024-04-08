@@ -6,15 +6,25 @@ using TenGymServices.Api.Plans.EventQuee;
 
 namespace TenGymServices.Api.Plans.Core.Utils
 {
-    public class MapperProfiles : Profile
+  public class MapperProfiles : Profile
+  {
+    public MapperProfiles()
     {
-      public MapperProfiles() 
-      {
-        CreateMap<CreatePlanCommand, PlanEventQuee>();
-        CreateMap<PlanEntity, PlanDto>();
-        CreateMap<PlanDto, PatchPlanDto>()
-            .ForMember(request => request.Tax, opt => opt.MapFrom((src, dest) => src.Taxes));
-        CreateMap<PatchPlanCommand, PatchPlanQuee>();        
-      }
+      CreateMap<CreatePlanCommand, PlanEventQuee>();
+
+      CreateMap<PlanDto, PatchPlanDto>()
+          .ForMember(request => request.Tax, opt => opt.MapFrom((src, dest) => src.Taxes));
+      CreateMap<PatchPlanCommand, PatchPlanQuee>();
+
+      CreateMap<PlanEntity, PlanDto>();
+      CreateMap<PlanEventQuee, PlanEntity>();
+      CreateMap<BillingCyclesDto, BillingCycleEntity>();
+      CreateMap<SetupFeeDto, SetupFeeEntity>();
+      CreateMap<FixedPriceDto, FixedPriceEntity>();
+      CreateMap<FrequencyDto, FrequencyEntity>();
+      CreateMap<PaymentPreferencesDto, PaymentPreferenceEntity>();
+      CreateMap<PricingSchemeDto, PricingSchemeEntity>();
+      CreateMap<TaxDto, TaxEntity>();
     }
+  }
 }
