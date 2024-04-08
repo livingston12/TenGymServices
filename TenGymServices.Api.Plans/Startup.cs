@@ -1,10 +1,13 @@
 using System.Net.Http.Headers;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TenGymServices.Api.Plans.Core.Filters;
 using TenGymServices.Api.Plans.Core.Utils;
 using TenGymServices.Api.Plans.Persistence;
+using TenGymServices.RabbitMq.Bus.BusRabbit;
+using TenGymServices.RabbitMq.Bus.Implements;
 using TenGymServices.Shared.Core.Extentions;
 using TenGymServices.Shared.Core.Interfaces;
 
@@ -62,6 +65,18 @@ namespace TenGymServices.Api.Plans
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly)); // Add MediaTR 
             services.AddServicesLifeCycles();
+
+            services.AddSingleton<IRabbitEventBus, RabbitEventBus>(x =>
+            {
+                var mediator = x.GetService<IMediator>();
+                var logger = x.GetService<ILogger<RabbitEventBus>>();
+                var scopeFactory = x.GetService<IServiceScopeFactory>();
+                var rabbit = new RabbitEventBus(mediator, scopeFactory)
+                {
+                    HostName = "TenGym.Rabbitmq-web"
+                };
+                return rabbit;
+            });
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)

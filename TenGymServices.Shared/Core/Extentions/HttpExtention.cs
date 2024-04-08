@@ -40,6 +40,11 @@ namespace TenGymServices.Shared.Core.Extentions
             var error = JsonConvert.DeserializeObject<ErrorMessage>(content);
             result.MessageError = error?.Message ?? string.Empty;
 
+            if (error?.Details != null)
+            {
+                result.MessageError = string.Join(Environment.NewLine, error.Details.Select(x=> $"{x.Description}: {x.Field}"));
+            }
+
             return result;
         }
     }

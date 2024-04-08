@@ -22,9 +22,9 @@ namespace TenGymServices.Api.Plans.Core.Dtos
         public BillingCyclesDto[] BillingCycles { get; set; }
         
         [JsonProperty("payment_preferences")]
-        public PaymentPreferencesDto PaymentPreference { get; set; }
+        public PaymentPreferencesDto? PaymentPreference { get; set; }
         [JsonProperty("taxes")]
-        public TaxDto Taxes { get; set; }
+        public TaxDto? Taxes { get; set; }
 
     }
 
