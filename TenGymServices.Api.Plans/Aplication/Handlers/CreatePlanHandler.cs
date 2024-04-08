@@ -14,16 +14,16 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
     {
         private readonly IPaypalPlansService<CreatePlanCommand> _paypalService;
         private readonly IMapper _mapper;
-        private readonly IRabbitEventBus _rabbitEventBus;
+        private readonly IMassTransientBus _massTransientEventBus;
 
         public CreatePlanHandler(IPaypalPlansService<CreatePlanCommand> paypalService,
             IMapper mapper,
-            IRabbitEventBus rabbitEventBus
+            IMassTransientBus rabbitEventBus
         )
         {
             _paypalService = paypalService;
             _mapper = mapper;
-            _rabbitEventBus = rabbitEventBus;
+            _massTransientEventBus = rabbitEventBus;
         }
 
         public async Task Handle(CreatePlanCommand request, CancellationToken cancellationToken)
@@ -37,8 +37,8 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
 
             var dataQuee = _mapper.Map<CreatePlanCommand, PlanEventQuee>(request);
             dataQuee.PaypalId = responsePaypal.Id;
-
-            _rabbitEventBus.Publish(dataQuee);
+            _massTransientEventBus.Publish(dataQuee);
+            //_rabbitEventBus.Publish(dataQuee);
         }
     }
 }

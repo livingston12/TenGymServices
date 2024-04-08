@@ -1,8 +1,10 @@
 using System.Net.Http.Headers;
 using FluentValidation.AspNetCore;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TenGymServices.Api.Plans.ConsumersRabiitMq;
 using TenGymServices.Api.Plans.Core.Filters;
 using TenGymServices.Api.Plans.Core.Utils;
 using TenGymServices.Api.Plans.Persistence;
@@ -29,13 +31,13 @@ namespace TenGymServices.Api.Plans
                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TenGymServices Plans", Version = "v1" });
                c.SchemaFilter<CustomSchemaFilter>();
            });
-           services.AddSwaggerGenNewtonsoftSupport();
+            services.AddSwaggerGenNewtonsoftSupport();
 
-           // Add Fluent Validation
+            // Add Fluent Validation
             services
                 .AddFluentValidationAutoValidation()
                 .AddFluentValidationClientsideAdapters();
-            
+
             services.AddControllers().AddNewtonsoftJson();
             services.AddEndpointsApiExplorer();
 
@@ -65,17 +67,21 @@ namespace TenGymServices.Api.Plans
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly)); // Add MediaTR 
             services.AddServicesLifeCycles();
-
-            services.AddSingleton<IRabbitEventBus, RabbitEventBus>(x =>
+            
+            services.AddMassTransit(x =>
             {
-                var mediator = x.GetService<IMediator>();
-                var logger = x.GetService<ILogger<RabbitEventBus>>();
-                var scopeFactory = x.GetService<IServiceScopeFactory>();
-                var rabbit = new RabbitEventBus(mediator, scopeFactory)
+                x.SetKebabCaseEndpointNameFormatter();
+                x.AddConsumer<CreatePlanConsumer>();
+                x.UsingRabbitMq((context, cfg) =>
                 {
-                    HostName = "TenGym.Rabbitmq-web"
-                };
-                return rabbit;
+                    cfg.Host(_configuration["RabbitMq:HostName"].ToString(), "/", h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+                    cfg.ConfigureEndpoints(context);
+                });
+
             });
         }
 
@@ -93,9 +99,9 @@ namespace TenGymServices.Api.Plans
             }
             app.UseMiddleware<ExceptionHandlerMiddleware>(); // Use manage Exception
             app.UseHttpsRedirection();
-            app.UseAuthorization();            
+            app.UseAuthorization();
             app.MapControllers();
-            
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -104,11 +110,6 @@ namespace TenGymServices.Api.Plans
 
 
             app.UseReDoc();
-
-
-
-
-            
         }
     }
 }
