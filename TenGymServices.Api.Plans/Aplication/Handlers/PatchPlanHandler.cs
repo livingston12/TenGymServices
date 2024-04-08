@@ -47,16 +47,15 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
                 request.ThrowHttpHandlerExeption("Product does not exist", HttpStatusCode.NotFound);
             }
 
-            var planDto = _mapper.Map<PatchPlanDto>(plan);
+            var patchPlanDto = _mapper.Map<PatchPlanDto>(plan);
             try
             {
-                var PatchPlan = await _paypalService.PatchPlan(plan.PaypalId, planDto);
+                var PatchPlan = await _paypalService.PatchPlan(plan.PaypalId, patchPlanDto);
                 if (PatchPlan.hasEerror == null)
                 {
                     request.ThrowHttpHandlerExeption(PatchPlan.MessageError, HttpStatusCode.BadRequest);
                 }
-                var planQuee = _mapper.Map<PatchPlanQuee>(plan);
-                planQuee.PlanId = request.PlanId;
+                var planQuee = _mapper.Map<PatchPlanQuee>(request);
                 
                 _rabbitEventBus.Publish(planQuee);
             }
