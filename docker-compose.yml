@@ -25,13 +25,10 @@ services:
     environment:
       - SA_PASSWORD=5Gyj35m^
       - ACCEPT_EULA=Y
-      - MSSQL_MEMORY_LIMIT_MB=200
     networks:
       - tengymservicesnet
     volumes:
       - sqlDataCatalog:/var/opt/mssql
-    mem_limit: 500M
-    cpus: 2
   # =============== Microservices ===============
   tengymservicesapiproducts:
     image: ${DOCKER_REGITRY-}tengymservicesapiproducts
