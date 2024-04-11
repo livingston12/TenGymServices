@@ -1,6 +1,6 @@
 using TenGymServices.RabbitMq.Bus.Events;
 
-namespace TenGymServices.RabbitMq.Bus.EventQuees
+namespace TenGymServices.Api.Products.RabbitMq.Queues
 {
     public class ProductEventQuee : Event
     {

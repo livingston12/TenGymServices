@@ -1,6 +1,6 @@
 using MassTransit;
 
-namespace TenGymServices.RabbitMq.Bus.BusRabbit
+namespace TenGymServices.RabbitMq.Bus.IBusMassTransient
 {
     public interface IMassTransientBus
     {

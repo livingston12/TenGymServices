@@ -1,5 +1,5 @@
 using MassTransit;
-using TenGymServices.RabbitMq.Bus.BusRabbit;
+using TenGymServices.RabbitMq.Bus.IBusMassTransient;
 
 namespace TenGymServices.RabbitMq.Bus.Implements
 {
