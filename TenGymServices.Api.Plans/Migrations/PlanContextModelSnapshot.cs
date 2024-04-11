@@ -36,8 +36,9 @@ namespace TenGymServices.Api.Plans.Migrations
                     b.Property<int>("Sequence")
                         .HasColumnType("int");
 
-                    b.Property<int>("TenureType")
-                        .HasColumnType("int");
+                    b.Property<string>("TenureType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TotalCycles")
                         .HasColumnType("int");
@@ -59,14 +60,16 @@ namespace TenGymServices.Api.Plans.Migrations
 
                     b.Property<string>("CurrencyCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<int>("PricingSchemeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("FixedPriceId");
 
@@ -90,8 +93,9 @@ namespace TenGymServices.Api.Plans.Migrations
                     b.Property<int>("IntervalCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("IntervalUnit")
-                        .HasColumnType("int");
+                    b.Property<string>("IntervalUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FrequencyId");
 
@@ -118,8 +122,9 @@ namespace TenGymServices.Api.Plans.Migrations
                     b.Property<int>("PlanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SetupFeeFailureAction")
-                        .HasColumnType("int");
+                    b.Property<string>("SetupFeeFailureAction")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PaymentPreferenceId");
 
@@ -142,11 +147,13 @@ namespace TenGymServices.Api.Plans.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(127)
+                        .HasColumnType("nvarchar(127)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(127)
+                        .HasColumnType("nvarchar(127)");
 
                     b.Property<string>("PaypalId")
                         .IsRequired()
@@ -156,8 +163,10 @@ namespace TenGymServices.Api.Plans.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime2");
@@ -196,14 +205,16 @@ namespace TenGymServices.Api.Plans.Migrations
 
                     b.Property<string>("CurrencyCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<int>("PaymentPreferenceId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("SetupFeeId");
 
@@ -218,9 +229,8 @@ namespace TenGymServices.Api.Plans.Migrations
                     b.Property<string>("TaxId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Inclusive")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Inclusive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Percentage")
                         .IsRequired()
@@ -336,8 +346,7 @@ namespace TenGymServices.Api.Plans.Migrations
                     b.Navigation("PaymentPreference")
                         .IsRequired();
 
-                    b.Navigation("Tax")
-                        .IsRequired();
+                    b.Navigation("Tax");
                 });
 
             modelBuilder.Entity("TenGymServices.Api.Plans.Core.Entities.PricingSchemeEntity", b =>

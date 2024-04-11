@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   rabbitmq:
-    image: rabbitmq:3-management
+    image: masstransit/rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -25,13 +25,10 @@ services:
     environment:
       - SA_PASSWORD=5Gyj35m^
       - ACCEPT_EULA=Y
-      - MSSQL_MEMORY_LIMIT_MB=200
     networks:
       - tengymservicesnet
     volumes:
       - sqlDataCatalog:/var/opt/mssql
-    mem_limit: 500M
-    cpus: 2
   # =============== Microservices ===============
   tengymservicesapiproducts:
     image: ${DOCKER_REGITRY-}tengymservicesapiproducts
@@ -57,7 +54,7 @@ services:
     networks:
       - tengymservicesnet
     depends_on:
-      - sql-server-product-db
+      - sql-server-catalog-db
       - rabbitmq
 networks:
   tengymservicesnet:

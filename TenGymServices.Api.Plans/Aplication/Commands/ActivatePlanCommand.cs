@@ -5,6 +5,6 @@ namespace TenGymServices.Api.Plans.Aplication.Commands
 {
     public record ActivatePlanCommand : IRequest, IPlanId
     {
-        public string PlanId {get; set;}
+        public int PlanId {get; set;}
     }
 }

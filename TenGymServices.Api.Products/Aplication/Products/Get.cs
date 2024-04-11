@@ -1,9 +1,11 @@
+using System.Net;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TenGymServices.Api.Products.Models.Dtos;
 using TenGymServices.Api.Products.Models.Entities;
 using TenGymServices.Api.Products.Persistence;
+using TenGymServices.Shared.Core.Extentions;
 
 namespace TenGymServices.Api.Products.Aplication.Products
 {
@@ -57,7 +59,7 @@ namespace TenGymServices.Api.Products.Aplication.Products
                                             .FirstOrDefaultAsync(x => x.ProductId == request.ProductId);
                 if (product == null)
                 {
-                    throw new Exception("Product does not exist");
+                    request.ThrowHttpHandlerExeption("Product does not exist", HttpStatusCode.BadRequest);
                 }
                 var productDto = _mapper.Map<ProductsEntity, ProductDto>(product);
 

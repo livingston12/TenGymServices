@@ -2,5 +2,5 @@ namespace TenGymServices.Api.Plans.Core.Interfaces;
 
 public interface IPlanId
 {
-    public string PlanId { get; set; }
+    public int PlanId { get; set; }
 }

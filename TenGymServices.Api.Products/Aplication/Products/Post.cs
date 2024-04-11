@@ -7,6 +7,7 @@ using TenGymServices.Shared.Core.Requests;
 using TenGymServices.RabbitMq.Bus.BusRabbit;
 using TenGymServices.RabbitMq.Bus.EventQuees;
 using TenGymServices.Api.Products.Core.Interfaces;
+using System.Net;
 
 namespace TenGymServices.Api.Products.Aplication
 {
@@ -64,7 +65,7 @@ namespace TenGymServices.Api.Products.Aplication
                 var responsePaypal = await _paypalService.PostAsync(requestPaypal, "/v1/catalogs/products");
                 if (responsePaypal.hasEerror)
                 {
-                    throw new Exception(responsePaypal.MessageError);
+                    request.ThrowHttpHandlerExeption("Product does not exist", HttpStatusCode.BadRequest);
                 }
                 requestPaypal.paypal_id = responsePaypal.Id;
                 var productQuee = _mapper.Map<ProductPaypalRequest, ProductEventQuee>(requestPaypal);

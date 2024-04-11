@@ -4,10 +4,11 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace TenGymServices.Api.Plans.Core.Filters
 {
-    public class EnumSchemaFilter : ISchemaFilter
+    public class CustomSchemaFilter : ISchemaFilter
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
+
             if (schema.Enum != null && context.Type.IsEnum)
             {
                 var enumValues = new List<IOpenApiAny>();
@@ -18,6 +19,8 @@ namespace TenGymServices.Api.Plans.Core.Filters
                 }
                 schema.Enum = enumValues;
             }
+           
+           
         }
     }
 }
