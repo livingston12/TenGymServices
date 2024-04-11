@@ -8,11 +8,11 @@ using TenGymServices.Shared.Core.Extentions;
 
 namespace TenGymServices.Api.Products.RabbitMq.Consumers
 {
-    public class CreatePlanConsumer : IConsumer<ProductEventQuee>
+    public class CreateProductConsumer : IConsumer<ProductEventQuee>
     {
         private readonly IMapper _mapper;
         private readonly ProductContext _context;
-        public CreatePlanConsumer(
+        public CreateProductConsumer(
             IMapper mapper,
             ProductContext context)
         {

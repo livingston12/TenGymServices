@@ -2,10 +2,13 @@ using System.Net;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.EntityFrameworkCore;
 using TenGymServices.Api.Products.Core.Dtos;
+using TenGymServices.Api.Products.Core.Interfaces;
 using TenGymServices.Api.Products.Persistence;
+using TenGymServices.Api.Products.RabbitMq.Queues;
+using TenGymServices.RabbitMq.Bus.IBusMassTransient;
 using TenGymServices.Shared.Core.Extentions;
+using static TenGymServices.Api.Products.Aplication.Products.Get;
 
 namespace TenGymServices.Api.Products.Aplication.Products
 {
@@ -14,39 +17,57 @@ namespace TenGymServices.Api.Products.Aplication.Products
         public class UpdateProduct : IRequest
         {
             public int ProductId { get; set; }
-            public JsonPatchDocument<ProductPatchDTO> PatchDocument { get; set; }
+            public JsonPatchDocument<ProductPatchDto> PatchDocument { get; set; }
         }
 
         public class UpdateProductHandler : IRequestHandler<UpdateProduct>
         {
             private readonly ProductContext _context;
             private readonly IMapper _mapper;
+            private readonly IMassTransientBus _massTransientBus;
+            private readonly IPaypalProductService<JsonPatchDocument<ProductPatchDto>> _paypalService;
+            private readonly IMediator _mediator;
 
-            public UpdateProductHandler(ProductContext context, IMapper mapper)
+            public UpdateProductHandler(
+                ProductContext context,
+                IMapper mapper,
+                IMassTransientBus massTransientBus,
+                IPaypalProductService<JsonPatchDocument<ProductPatchDto>> paypalService,
+                IMediator mediator)
             {
                 _context = context;
                 _mapper = mapper;
+                _massTransientBus = massTransientBus;
+                _mediator = mediator;
+                _paypalService = paypalService;
             }
 
             public async Task Handle(UpdateProduct request, CancellationToken cancellationToken)
             {
                 if (request.PatchDocument == null)
                 {
-                    request.ThrowHttpHandlerExeption("Please verify your body request",  HttpStatusCode.BadRequest);
+                    request.ThrowHttpHandlerExeption("Please verify your body request", HttpStatusCode.BadRequest);
                 }
 
-                var product = await _context.Products.FirstOrDefaultAsync(x => x.ProductId == request.ProductId);
+                var product = await _mediator.Send(new GetProductsById() { ProductId = request.ProductId }, cancellationToken);
 
-                if (product == null)
+                var PatchPlanPaypal = await _paypalService.PostAsync(request.PatchDocument, $"/v1/catalogs/products/{product.PaypalId}", HttpMethod.Patch);
+
+                if (PatchPlanPaypal.hasEerror)
                 {
-                    request.ThrowHttpHandlerExeption("Product does not exist",  HttpStatusCode.NotFound);
+                    request.ThrowHttpHandlerExeption(PatchPlanPaypal.MessageError, HttpStatusCode.BadRequest);
                 }
 
-                var productDto = _mapper.Map<ProductPatchDTO>(product);
-                request.PatchDocument.ApplyTo(productDto);
+                var patchProductDto = _mapper.Map<ProductPatchDto>(product);
+                request.PatchDocument.ApplyTo(patchProductDto);
 
-                _mapper.Map(productDto, product);
-                await _context.SaveChangesAsync();
+                var planQuee = new PatchProductQuee()
+                {
+                    ProductId = request.ProductId,
+                    PatchProduct = patchProductDto
+                };
+
+                _massTransientBus.Publish(planQuee);
             }
         }
     }
