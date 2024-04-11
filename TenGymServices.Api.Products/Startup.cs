@@ -5,11 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TenGymServices.Api.Products.Aplication.ExternalServices;
 using TenGymServices.Api.Products.Core.Interfaces;
 using TenGymServices.Api.Products.Core.Utils;
-using TenGymServices.Api.Products.HandlerRabiitmq;
 using TenGymServices.Api.Products.Persistence;
-using TenGymServices.RabbitMq.Bus.BusRabbit;
-using TenGymServices.RabbitMq.Bus.EventQuees;
-using TenGymServices.RabbitMq.Bus.Implements;
 using TenGymServices.Shared.Core.Extentions;
 using TenGymServices.Shared.Core.Interfaces;
 using TenGymServices.Shared.Implements;
@@ -66,22 +62,6 @@ namespace TenGymServices.Api.Products
             services.AddScoped<IPaypalProductService, PaypalService>();
             services.AddSingleton<ExceptionHandlerMiddleware>();
             services.AddSingleton<IPaypalAuthService, PaypalAuthService>();
-            services.AddSingleton<IRabbitEventBus, RabbitEventBus>(x =>
-            {
-                var mediator = x.GetService<IMediator>();
-                var logger = x.GetService<ILogger<RabbitEventBus>>();
-                var scopeFactory = x.GetService<IServiceScopeFactory>();
-                var rabbit = new RabbitEventBus(mediator, scopeFactory)
-                {
-                    HostName = "TenGym.Rabbitmq-web"
-                };
-                return rabbit;
-            });
-
-            services.AddTransient<ProductEventHandler>();
-
-            // Consume Rabbitmq
-            services.AddTransient<IEventHandler<ProductEventQuee>, ProductEventHandler>();
 
         }
 
@@ -110,11 +90,6 @@ namespace TenGymServices.Api.Products
 
             app.MapControllers();
 
-            // consume rabbitmq
-            var eventBus = app.Services.GetRequiredService<IRabbitEventBus>();
-            //eventBus.HostName = "TenGym.Rabbitmq-web";
-            //eventBus.Exchange = "TenGym.Product";
-            eventBus.Suscribe<ProductEventQuee, ProductEventHandler>();
 
         }
     }
