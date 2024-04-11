@@ -15,7 +15,7 @@ namespace TenGymServices.Api.Products.Aplication.ExternalServices
             _httpClientFactoty = httpClient;
         }
 
-        public async Task<(bool hasEerror, string Id, string MessageError)> PostAsync(ProductPaypalRequest request, string method)
+        public async Task<(bool hasEerror, string Id, string MessageError)> PostAsync(ProductPaypalRequest request, string method, HttpMethod httpMethod = null)
         {
             var httpClient = _httpClientFactoty.CreateClient("PaypalClient");
             

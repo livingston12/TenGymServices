@@ -15,24 +15,14 @@ namespace TenGymServices.Api.Plans.Aplication.ExternalServices
             _httpClientFactoty = httpClientFactory;
         }
 
-        public Task ActivatePlan(int planId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<(bool hasEerror, string Id, string MessageError)> PostAsync(TRequest request, string method)
+        public async Task<(bool hasEerror, string Id, string MessageError)> PostAsync(TRequest request, string method, HttpMethod httpMethod = null)
         {
             HttpClient httpClient = _httpClientFactoty.CreateClient("PaypalClient");
             
-            var response = await httpClient.PostGenericAsync(request, method);
+            var response = await httpClient.PostGenericAsync(request, method, httpMethod);
             var content = await response.Content.ReadAsStringAsync();
 
             return response.GenerateMessage<PlanPaypalResponse>(content);
-        }
-
-        public Task DesactivatePlan(int planId)
-        {
-            throw new NotImplementedException();
         }
 
         public Task<List<PlanDto>> GetAllPlans(string productPaypalId)
@@ -41,11 +31,6 @@ namespace TenGymServices.Api.Plans.Aplication.ExternalServices
         }
 
         public Task<PlanDto> GetByIdPlan(string productPaypalId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<(bool hasEerror, string Id, string MessageError)> PatchPlan(string planId, PatchPlanDto planDto)
         {
             throw new NotImplementedException();
         }

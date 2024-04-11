@@ -8,8 +8,11 @@ namespace TenGymServices.Api.Plans.Core.Entities
         [Key]
         public int FrequencyId { get; set; }
         public int BillingCycleId { get; set; }
-        public INTERVAL_UNIT IntervalUnit { get; set; }
-        public int IntervalCount { get; set; }
+        [EnumDataType(typeof(INTERVAL_UNIT))]
+        [Required, Range(1, 24)]
+        public string IntervalUnit { get; set; }
+        [Range(1, 365)]
+        public int IntervalCount { get; set; } = 1;
         public BillingCycleEntity billingCycle { get; set; }
     }
 }

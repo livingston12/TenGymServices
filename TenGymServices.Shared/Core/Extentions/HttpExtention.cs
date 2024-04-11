@@ -11,10 +11,23 @@ namespace TenGymServices.Shared.Core.Extentions
     public static class HttpExtention
     {
         public static async Task<HttpResponseMessage> PostGenericAsync<TRequest>(this HttpClient httpClient,
-            TRequest request, string method)
+            TRequest request, string method, HttpMethod httpMethod = null)
+            where  TRequest : class
         {
+            var allowHttpMethods = new HttpMethod[] { HttpMethod.Post, HttpMethod.Patch, HttpMethod.Put };
+
+            if (httpMethod == null)
+            {
+                httpMethod = HttpMethod.Post;
+            }
+            
+            if (!allowHttpMethods.Contains(httpMethod))
+            {
+                request.ThrowHttpHandlerExeption("The Method is not allow for that operation", HttpStatusCode.BadRequest);
+            }
+
             string dataJson = JsonConvert.SerializeObject(request);
-            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, method)
+            HttpRequestMessage requestMessage = new HttpRequestMessage(httpMethod, method)
             {
                 Content = new StringContent(dataJson, Encoding.UTF8, "application/json")
             };
@@ -31,7 +44,7 @@ namespace TenGymServices.Shared.Core.Extentions
             if (response.IsSuccessStatusCode)
             {
                 var responseMap = JsonConvert.DeserializeObject<TRequest>(content);
-                return (false, responseMap.Id, string.Empty);
+                return (false, responseMap?.Id ?? "", string.Empty);
             }
             else if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
@@ -42,7 +55,7 @@ namespace TenGymServices.Shared.Core.Extentions
 
             if (error?.Details != null)
             {
-                result.MessageError = string.Join(Environment.NewLine, error.Details.Select(x=> $"{x.Description}: {x.Field}"));
+                result.MessageError = string.Join(Environment.NewLine, error.Details.Select(x => $"{x.Description}: {x.Field}"));
             }
 
             return result;

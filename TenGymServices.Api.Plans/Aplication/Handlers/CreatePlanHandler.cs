@@ -4,7 +4,7 @@ using MediatR;
 using TenGymServices.Api.Plans.Aplication.Commands;
 using TenGymServices.Api.Plans.Aplication.Commands.Validators;
 using TenGymServices.Api.Plans.Core.Interfaces;
-using TenGymServices.Api.Plans.EventQuee;
+using TenGymServices.Api.Plans.RabbitMq.Queues;
 using TenGymServices.RabbitMq.Bus.BusRabbit;
 using TenGymServices.Shared.Core.Extentions;
 

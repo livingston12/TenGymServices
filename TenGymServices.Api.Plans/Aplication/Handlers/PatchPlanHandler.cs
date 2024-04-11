@@ -1,11 +1,12 @@
 using System.Net;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using TenGymServices.Api.Plans.Aplication.Commands;
 using TenGymServices.Api.Plans.Aplication.Queries;
 using TenGymServices.Api.Plans.Core.Dtos;
 using TenGymServices.Api.Plans.Core.Interfaces;
-using TenGymServices.Api.Plans.EventQuee;
+using TenGymServices.Api.Plans.RabbitMq.Queues;
 using TenGymServices.RabbitMq.Bus.BusRabbit;
 using TenGymServices.Shared.Core.Extentions;
 
@@ -13,21 +14,21 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
 {
     public class PatchPlanHandler : IRequestHandler<PatchPlanCommand>
     {
-        private readonly IPaypalPlansService<PatchPlanCommand> _paypalService;
+        private readonly IPaypalPlansService<JsonPatchDocument<PatchPlanDto>> _paypalService;
         private readonly IMapper _mapper;
-        private readonly IRabbitEventBus _rabbitEventBus;
+        private readonly IMassTransientBus _massTransientBus;
         private readonly IMediator _mediator;
         private readonly ILogger<PatchPlanHandler> _logger;
 
-        public PatchPlanHandler(IPaypalPlansService<PatchPlanCommand> paypalService,
+        public PatchPlanHandler(IPaypalPlansService<JsonPatchDocument<PatchPlanDto>> paypalService,
             IMapper mapper,
-            IRabbitEventBus rabbitEventBus,
+            IMassTransientBus massTransientBus,
             IMediator mediator,
             ILogger<PatchPlanHandler> logger)
         {
             _paypalService = paypalService;
             _mapper = mapper;
-            _rabbitEventBus = rabbitEventBus;
+            _massTransientBus = massTransientBus;
             _mediator = mediator;
             _logger = logger;
         }
@@ -44,26 +45,27 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
 
             if (plan == null)
             {
-                request.ThrowHttpHandlerExeption("Product does not exist", HttpStatusCode.NotFound);
+                request.ThrowHttpHandlerExeption("Plan does not exist", HttpStatusCode.NotFound);
+            }
+            
+
+            var PatchPlanPaypal = await _paypalService.PostAsync(request.PatchDocument, $"/v1/billing/plans/{plan.PaypalId}", HttpMethod.Patch);
+
+            if (PatchPlanPaypal.hasEerror)
+            {
+                request.ThrowHttpHandlerExeption(PatchPlanPaypal.MessageError, HttpStatusCode.BadRequest);
             }
 
             var patchPlanDto = _mapper.Map<PatchPlanDto>(plan);
-            try
+            request.PatchDocument.ApplyTo(patchPlanDto);
+
+            var planQuee = new PatchPlanQuee()
             {
-                var PatchPlan = await _paypalService.PatchPlan(plan.PaypalId, patchPlanDto);
-                if (PatchPlan.hasEerror == null)
-                {
-                    request.ThrowHttpHandlerExeption(PatchPlan.MessageError, HttpStatusCode.BadRequest);
-                }
-                var planQuee = _mapper.Map<PatchPlanQuee>(request);
-                
-                _rabbitEventBus.Publish(planQuee);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                request.ThrowHttpHandlerExeption("Internal Server Error please contact support", HttpStatusCode.InternalServerError);
-            }
+                PlanId = request.PlanId,
+                PatchPlan = patchPlanDto
+            };
+
+            _massTransientBus.Publish(planQuee);
         }
     }
 }

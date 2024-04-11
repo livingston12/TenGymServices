@@ -1,7 +1,13 @@
+using System.Text.Json;
+using Newtonsoft.Json;
+
 namespace TenGymServices.Api.Plans.Core.Dtos
 {
     public class UpdatePricingPlanDto
     {
-       public PricingSchemeDto PricingScheme { get; set; }
+        [JsonProperty("pricing_schemes")]
+        public List<UpdatePricingSchemePlanDto> PricingSchemes { get; set; }
     }
+
+   
 }

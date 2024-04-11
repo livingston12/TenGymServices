@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace TenGymServices.Api.Plans.Core.Entities
 {
@@ -8,7 +9,7 @@ namespace TenGymServices.Api.Plans.Core.Entities
         public string TaxId { get; set; }
         public int PlanId { get; set; }
         public string Percentage { get; set; }
-        public string Inclusive { get; set; }
-        public PlanEntity Plan { get; set; }
+        public bool Inclusive { get; set; } = true;
+        public PlanEntity? Plan { get; set; }
     }
 }

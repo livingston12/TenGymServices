@@ -1,15 +1,12 @@
 using System.Net.Http.Headers;
 using FluentValidation.AspNetCore;
 using MassTransit;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using TenGymServices.Api.Plans.ConsumersRabiitMq;
 using TenGymServices.Api.Plans.Core.Filters;
 using TenGymServices.Api.Plans.Core.Utils;
 using TenGymServices.Api.Plans.Persistence;
-using TenGymServices.RabbitMq.Bus.BusRabbit;
-using TenGymServices.RabbitMq.Bus.Implements;
+using TenGymServices.Api.Plans.RabbitMq.Consumers;
 using TenGymServices.Shared.Core.Extentions;
 using TenGymServices.Shared.Core.Interfaces;
 
@@ -72,6 +69,11 @@ namespace TenGymServices.Api.Plans
             {
                 x.SetKebabCaseEndpointNameFormatter();
                 x.AddConsumer<CreatePlanConsumer>();
+                x.AddConsumer<ActivatePlanConsumer>();
+                x.AddConsumer<DesactivatePlanConsumer>();
+                x.AddConsumer<PathPlanConsumer>();
+                 x.AddConsumer<UpdatePricingPlanConsumer>();
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(_configuration["RabbitMq:HostName"].ToString(), "/", h =>

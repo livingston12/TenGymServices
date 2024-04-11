@@ -1,7 +1,9 @@
 using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using TenGymServices.Api.Plans.Aplication.Commands;
 using TenGymServices.Api.Plans.Aplication.Queries;
+using TenGymServices.Api.Plans.Core.Dtos;
 
 namespace TenGymServices.Api.Plans.Controllers
 {
@@ -28,9 +30,9 @@ namespace TenGymServices.Api.Plans.Controllers
         }
 
         [HttpGet("{PlanId:int}")]
-        public async Task GetPlansById([FromRoute] GetByIdPlanQuery request)
+        public async Task<PlanDto> GetPlansById([FromRoute] GetByIdPlanQuery request)
         {
-            await _mediator.Send(request, new CancellationToken());
+            return await _mediator.Send(request, new CancellationToken());
         }
 
         [HttpPost("{PlanId:int}/deactivate")]
@@ -45,6 +47,27 @@ namespace TenGymServices.Api.Plans.Controllers
             await _mediator.Send(request, new CancellationToken());
         }
 
+        [HttpPatch("{planId:int}")]
+        public async Task PatchPlan([FromRoute] int planId, [FromBody] JsonPatchDocument<PatchPlanDto> request)
+        {
+            var patchRequest = new PatchPlanCommand
+            {
+                PlanId = planId,
+                PatchDocument = request
+            };
+            await _mediator.Send(patchRequest, new CancellationToken());
+        }
 
+        [HttpPost("{planId:int}/updatepricing")]
+        public async Task UpdatePrincingPlan([FromRoute] int planId, [FromBody] UpdatePricingPlanDto request)
+        {
+            var command = new UpdatePricingPlanCommand()
+            {
+                PlanId = planId,
+                PricingSchemes = request.PricingSchemes
+            };
+
+            await _mediator.Send(command, new CancellationToken());
+        }
     }
 }

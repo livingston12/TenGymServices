@@ -8,8 +8,12 @@ namespace TenGymServices.Api.Plans.Core.Entities
         [Key]
         public int BillingCycleId { get; set; }
         public int PlanId { get; set; }
-        public TENURE_TYPES TenureType { get; set; }
+        [Required, Range(1, 24)]
+        [EnumDataType(typeof(TENURE_TYPES))]
+        public string TenureType { get; set; }
+        [Required, Range(1, 99)]
         public int Sequence { get; set; }
+        [Range(0, 999)]
         public int TotalCycles { get; set; }
         public PricingSchemeEntity PricingScheme { get; set; }
         public FrequencyEntity Frequency { get; set; }
