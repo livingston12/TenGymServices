@@ -36,18 +36,12 @@ namespace TenGymServices.Api.Plans.Aplication.Handlers
 
         public async Task Handle(PatchPlanCommand request, CancellationToken cancellationToken)
         {
-            var plan = await _mediator.Send(new GetByIdPlanQuery() { PlanId = request.PlanId }, cancellationToken);
-
             if (request.PatchDocument == null)
             {
                 request.ThrowHttpHandlerExeption("Please verify your body request", HttpStatusCode.BadRequest);
             }
 
-            if (plan == null)
-            {
-                request.ThrowHttpHandlerExeption("Plan does not exist", HttpStatusCode.NotFound);
-            }
-            
+            var plan = await _mediator.Send(new GetByIdPlanQuery() { PlanId = request.PlanId }, cancellationToken);
 
             var PatchPlanPaypal = await _paypalService.PostAsync(request.PatchDocument, $"/v1/billing/plans/{plan.PaypalId}", HttpMethod.Patch);
 

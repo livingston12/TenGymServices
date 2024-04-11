@@ -39,7 +39,7 @@ namespace TenGymServices.Api.Products.Controllers
         }
 
         [HttpPatch("{ProductId:int}")]
-        public async Task UpdateProduct([FromRoute] int ProductId, [FromBody] JsonPatchDocument<ProductPatchDTO> patchDocument)
+        public async Task UpdateProduct([FromRoute] int ProductId, [FromBody] JsonPatchDocument<ProductPatchDto> patchDocument)
         {
             Patch.UpdateProduct path = new Patch.UpdateProduct()
             {

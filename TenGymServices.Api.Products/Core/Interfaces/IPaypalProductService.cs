@@ -4,7 +4,8 @@ using TenGymServices.Shared.Core.Requests;
 
 namespace TenGymServices.Api.Products.Core.Interfaces
 {
-    public interface IPaypalProductService : IPaypalService<ProductPaypalRequest>
+    public interface IPaypalProductService<TRequest> : IPaypalService<TRequest>
+        where TRequest : class
     {
         public Task<List<ProductPaypalDto>> GetProducts(PaginationPaypalRequest pagination);
         public Task<GeneralDto<ProductPaypalDto>> GetProductId(int ProductId);

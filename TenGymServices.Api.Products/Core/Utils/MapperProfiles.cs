@@ -25,12 +25,14 @@ namespace TenGymServices.Api.Products.Core.Utils
                 .ForMember(request => request.PaypalId, opt => opt.MapFrom((src, dest) => src.paypal_id))
                 .ForMember(request => request.HomeUrl, opt => opt.MapFrom((src, dest) => src.home_url))
                 .ForMember(request => request.ImageUrl, opt => opt.MapFrom((src, dest) => src.image_url));
-            CreateMap<ProductPatchDTO, ProductsEntity>()
+            CreateMap<ProductPatchDto, ProductsEntity>()
               .ReverseMap();
 
             CreateMap<CreateTaskCommand, ProductsEntity>();
             CreateMap<ProductsEntity, ProductDto>();
             CreateMap<ProductEventQuee, ProductsEntity>();
+            CreateMap<ProductDto, ProductPatchDto>();
+            CreateMap<PatchProductQuee, ProductsEntity>();
         }
     }
 }

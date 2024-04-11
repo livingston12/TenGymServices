@@ -6,7 +6,8 @@ using TenGymServices.Shared.Core.Responses;
 
 namespace TenGymServices.Api.Products.Aplication.ExternalServices
 {
-    public class PaypalService : IPaypalProductService
+    public class PaypalService<TRequest> : IPaypalProductService<TRequest>
+        where TRequest : class
     {
         public readonly IHttpClientFactory _httpClientFactoty;
 
@@ -15,11 +16,11 @@ namespace TenGymServices.Api.Products.Aplication.ExternalServices
             _httpClientFactoty = httpClient;
         }
 
-        public async Task<(bool hasEerror, string Id, string MessageError)> PostAsync(ProductPaypalRequest request, string method, HttpMethod httpMethod = null)
+        public async Task<(bool hasEerror, string Id, string MessageError)> PostAsync(TRequest request, string method, HttpMethod httpMethod = null)
         {
             var httpClient = _httpClientFactoty.CreateClient("PaypalClient");
             
-            var response = await httpClient.PostGenericAsync(request, method);
+            var response = await httpClient.PostGenericAsync(request, method, httpMethod);
             var content = await response.Content.ReadAsStringAsync();
 
             return response.GenerateMessage<ProductPaypalResponse>(content);

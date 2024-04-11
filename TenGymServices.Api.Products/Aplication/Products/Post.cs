@@ -39,12 +39,12 @@ namespace TenGymServices.Api.Products.Aplication
         public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand>
         {
             private readonly IMapper _mapper;
-            private readonly IPaypalProductService _paypalService;
+            private readonly IPaypalProductService<ProductPaypalRequest> _paypalService;
             private readonly IMassTransientBus _rabbitEventBus;
 
             public CreateTaskCommandHandler(
                 IMapper mapper,
-                IPaypalProductService paypalService,
+                IPaypalProductService<ProductPaypalRequest> paypalService,
                 IMassTransientBus rabbitEventBus
                 )
             {
