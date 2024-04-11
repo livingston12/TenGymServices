@@ -4,7 +4,7 @@ using TenGymServices.Api.Products.Core.Dtos;
 using TenGymServices.Api.Products.Models.Dtos;
 using TenGymServices.Api.Products.Models.Entities;
 using TenGymServices.Api.Products.Models.Enums;
-using TenGymServices.RabbitMq.Bus.EventQuees;
+using TenGymServices.Api.Products.RabbitMq.Queues;
 using TenGymServices.Shared.Core.Requests;
 using static TenGymServices.Api.Products.Aplication.Post;
 
