@@ -1,13 +1,12 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using TenGymServices.Api.Products.Persistence;
 using TenGymServices.Shared.Core.Extentions;
 using TenGymServices.Shared.Core.Requests;
-using TenGymServices.RabbitMq.Bus.BusRabbit;
-using TenGymServices.RabbitMq.Bus.EventQuees;
 using TenGymServices.Api.Products.Core.Interfaces;
 using System.Net;
+using TenGymServices.RabbitMq.Bus.IBusMassTransient;
+using TenGymServices.Api.Products.RabbitMq.Queues;
 
 namespace TenGymServices.Api.Products.Aplication
 {
@@ -41,14 +40,12 @@ namespace TenGymServices.Api.Products.Aplication
         {
             private readonly IMapper _mapper;
             private readonly IPaypalProductService _paypalService;
-            private readonly IRabbitEventBus _rabbitEventBus;
+            private readonly IMassTransientBus _rabbitEventBus;
 
             public CreateTaskCommandHandler(
-                ProductContext context,
                 IMapper mapper,
                 IPaypalProductService paypalService,
-                IRabbitEventBus rabbitEventBus,
-                ILogger<CreateTaskCommandHandler> logger
+                IMassTransientBus rabbitEventBus
                 )
             {
                 _mapper = mapper;

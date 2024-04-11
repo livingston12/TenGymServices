@@ -1,8 +1,7 @@
 using MassTransit;
 using TenGymServices.Api.Plans.Aplication.ExternalServices;
-using TenGymServices.Api.Plans.Core.Entities;
 using TenGymServices.Api.Plans.Core.Interfaces;
-using TenGymServices.RabbitMq.Bus.BusRabbit;
+using TenGymServices.RabbitMq.Bus.IBusMassTransient;
 using TenGymServices.RabbitMq.Bus.Implements;
 using TenGymServices.Shared.Core.Interfaces;
 using TenGymServices.Shared.Implements;
@@ -18,7 +17,6 @@ namespace TenGymServices.Api.Plans.Core.Utils
             services.AddSingleton<IPaypalAuthService, PaypalAuthService>();
 
             services.AddScoped(typeof(IPaypalPlansService<>), typeof(PaypalService<>));
-            //services.AddScoped(typeof(IRepositoryDB<>), typeof(RepositoryDB<>));
 
             services.AddScoped<IRepositoryDB, RepositoryDB>();
 

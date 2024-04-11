@@ -4,7 +4,7 @@ using TenGymServices.Api.Plans.Aplication.Commands;
 using TenGymServices.Api.Plans.Aplication.Queries;
 using TenGymServices.Api.Plans.Core.Interfaces;
 using TenGymServices.Api.Plans.RabbitMq.Queues;
-using TenGymServices.RabbitMq.Bus.BusRabbit;
+using TenGymServices.RabbitMq.Bus.IBusMassTransient;
 using TenGymServices.Shared.Core.Extentions;
 
 namespace TenGymServices.Api.Plans.Aplication.Handlers
